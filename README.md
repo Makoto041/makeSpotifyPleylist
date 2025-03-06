@@ -1,55 +1,33 @@
+# My Setlist Frontend
 
-# React + TypeScript + Vite
+このリポジトリは、ユーザーが画像またはテキスト形式のセットリストを入力し、Spotify プレイリストを自動生成するためのフロントエンドアプリケーションです。  
+フロントエンドは **React 18**、**Vite**、および **Tailwind CSS v4** を用いて実装されています。  
+（参考: [Tailwind CSS v4 – Zenn](https://zenn.dev/miz_dev/articles/tailwind-css-v4)、[Tailwind CSS v4 Blog](https://tailwindcss.com/blog/tailwindcss-v4)）
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 特徴
 
-Currently, two official plugins are available:
+- **入力形式**:  
+  - 画像アップロード（Gemini 2.0 OCR API を利用したテキスト抽出）
+  - テキスト入力（セットリストを直接入力）
+- **プレイリスト名**:  
+  - ユーザーが任意に入力可能  
+  - 未入力の場合は自動的に「YYYY-MM-DD Setlist」として生成
+- **モダンな UI**:  
+  - シンプルで洗練されたデザイン（Tailwind CSS v4 使用）
+- **拡張性**:  
+  - 今後の改修・機能拡張を視野に入れたコード設計
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## Expanding the ESLint configuration
+### 前提条件
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- [Node.js](https://nodejs.org/) (v14以上推奨)
+- [npm](https://www.npmjs.com/) または [Yarn](https://yarnpkg.com/)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### プロジェクトのセットアップ
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **リポジトリをクローン**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+   ```bash
+   git clone https://github.com/<YOUR_GITHUB_USERNAME>/my-setlist-frontend.git
+   cd my-setlist-frontend
