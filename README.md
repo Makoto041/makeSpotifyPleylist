@@ -1,13 +1,13 @@
 # makeSpotifyPlaylist
 
 このリポジトリは、ユーザーが画像またはテキスト形式のセットリストを入力し、Spotify プレイリストを自動生成するためのフロントエンドアプリケーションです。  
-フロントエンドは **React 18**、**Vite**、および **Tailwind CSS v4** を用いて実装されています。  
-（参考: [Tailwind CSS v4 – Zenn](https://zenn.dev/miz_dev/articles/tailwind-css-v4)、[Tailwind CSS v4 Blog](https://tailwindcss.com/blog/tailwindcss-v4)）
+フロントエンドは **React**、**Vite**、および **Tailwind CSS** を用いて実装されています。  
+
 
 ## 特徴
 
 - **入力形式**:  
-  - 画像アップロード（Gemini 2.0 OCR API を利用したテキスト抽出）
+  - 画像アップロード（Gemini API を利用したテキスト抽出）
   - テキスト入力（セットリストを直接入力）
 - **プレイリスト名**:  
   - ユーザーが任意に入力可能  
@@ -22,7 +22,7 @@
 ### 前提条件
 
 - [Node.js](https://nodejs.org/) (v14以上推奨)
-- [npm](https://www.npmjs.com/) または [Yarn](https://yarnpkg.com/)
+- [npm](https://www.npmjs.com/) 
 
 ### プロジェクトのセットアップ
 
