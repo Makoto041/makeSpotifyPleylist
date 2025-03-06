@@ -1,4 +1,4 @@
-# My Setlist Frontend
+# makeSpotifyPlaylist
 
 このリポジトリは、ユーザーが画像またはテキスト形式のセットリストを入力し、Spotify プレイリストを自動生成するためのフロントエンドアプリケーションです。  
 フロントエンドは **React 18**、**Vite**、および **Tailwind CSS v4** を用いて実装されています。  
