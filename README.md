@@ -29,5 +29,5 @@
 1. **リポジトリをクローン**
 
    ```bash
-   git clone https://github.com/<YOUR_GITHUB_USERNAME>/my-setlist-frontend.git
+   git clone https://github.com/Makoto041/makeSpotifyPleylist.git
    cd my-setlist-frontend
