@@ -12,10 +12,8 @@
 - **プレイリスト名**:  
   - ユーザーが任意に入力可能  
   - 未入力の場合は自動的に「YYYY-MM-DD Setlist」として生成
-- **モダンな UI**:  
-  - シンプルで洗練されたデザイン（Tailwind CSS v4 使用）
-- **拡張性**:  
-  - 今後の改修・機能拡張を視野に入れたコード設計
+- **出力**:  
+  - Spotifyでプレイリストが自動で生成
 
 ## Getting Started
 
@@ -30,4 +28,4 @@
 
    ```bash
    git clone https://github.com/Makoto041/makeSpotifyPleylist.git
-   cd my-setlist-frontend
+   cd makeSpotifyPleylist
