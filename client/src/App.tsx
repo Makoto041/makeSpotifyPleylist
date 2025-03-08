@@ -28,7 +28,8 @@ const App: React.FC = () => {
       const response = await axios.post("/api", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setResultMsg(response.data.message);
+      const resData = response.data as any;
+      setResultMsg(resData.message);
     } catch (error) {
       console.error(error);
       setResultMsg("エラーが発生しました。");
