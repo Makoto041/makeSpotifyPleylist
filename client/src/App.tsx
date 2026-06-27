@@ -1,6 +1,13 @@
-// client/src/App.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+
+interface ApiResponse {
+  message: string;
+  playlistId?: string;
+  tracksAdded?: number;
+  tracksTotal?: number;
+  needsLogin?: boolean;
+}
 
 const App: React.FC = () => {
   const [playlistName, setPlaylistName] = useState<string>("");
@@ -9,10 +16,22 @@ const App: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [resultMsg, setResultMsg] = useState<string>("");
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
+  const [needsLogin, setNeedsLogin] = useState<boolean>(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("login") === "success") {
+      setLoginSuccess(true);
+      window.history.replaceState({}, "", "/");
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setNeedsLogin(false);
+
     const name =
       playlistName || `${new Date().toISOString().slice(0, 10)} Setlist`;
     const formData = new FormData();
@@ -23,16 +42,28 @@ const App: React.FC = () => {
     } else if (inputType === "image" && imageFile) {
       formData.append("image", imageFile);
     }
+
     try {
-      // Vercel の場合、相対パス "/api" でサーバーレス関数にリクエスト可能
-      const response = await axios.post("/api", formData, {
+      const response = await axios.post("/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      const resData = response.data as any;
-      setResultMsg(resData.message);
-    } catch (error) {
-      console.error(error);
-      setResultMsg("エラーが発生しました。");
+      const resData = response.data as ApiResponse;
+      if (resData.playlistId) {
+        setResultMsg(
+          `プレイリスト作成成功！（${resData.tracksAdded}/${resData.tracksTotal}曲追加） ID: ${resData.playlistId}`
+        );
+      } else {
+        setResultMsg(resData.message);
+      }
+    } catch (error: any) {
+      console.error("送信エラー:", error);
+      const resData = error.response?.data as ApiResponse | undefined;
+      if (resData?.needsLogin) {
+        setNeedsLogin(true);
+        setResultMsg("");
+      } else {
+        setResultMsg(resData?.message || "エラーが発生しました。");
+      }
     }
     setLoading(false);
   };
@@ -43,6 +74,31 @@ const App: React.FC = () => {
         <h1 className="text-4xl font-bold mb-6 text-green-500">
           Spotify Setlist Generator
         </h1>
+
+        {loginSuccess && (
+          <div className="mb-4 p-3 bg-green-700 rounded text-green-100">
+            Spotifyログイン成功！セットリストを入力してプレイリストを作成できます。
+          </div>
+        )}
+
+        {needsLogin && (
+          <div className="mb-4 p-3 bg-yellow-700 rounded text-yellow-100">
+            先にSpotifyでログインしてください。
+            <a href="/api/auth/login" className="ml-2 underline font-semibold">
+              ログインする
+            </a>
+          </div>
+        )}
+
+        <div className="mb-6">
+          <a
+            href="/api/auth/login"
+            className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+          >
+            Spotifyでログイン
+          </a>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block font-medium mb-2">プレイリスト名</label>
@@ -73,7 +129,7 @@ const App: React.FC = () => {
               <textarea
                 value={setlistText}
                 onChange={(e) => setSetlistText(e.target.value)}
-                placeholder="例:&#10;1. アーティストA - 楽曲A&#10;2. アーティストB - 楽曲B"
+                placeholder="例:&#10;1: STAY - Smile High, Antwaun Stanley&#10;2: In Touch - Daul, Charli Taft&#10;3: WE ARE - eill&#10;..."
                 className="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500 h-40"
               ></textarea>
             </div>
