@@ -5,6 +5,8 @@ import { spotifyApi, SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI } from "./init";
 
 const auth = new Hono();
 const scope = "playlist-modify-public playlist-modify-private";
+// 本番(HTTPS)でのみ secure Cookie を有効化。ローカルのhttpでもログインできるように。
+const isProd = process.env.NODE_ENV === "production";
 
 auth.get("/login", (c) => {
   // 予測不能な乱数で state を生成し、HttpOnly Cookie に保存しておく
@@ -13,6 +15,7 @@ auth.get("/login", (c) => {
     maxAge: 600, // 10分でログインを完了させる想定
     path: "/",
     httpOnly: true,
+    secure: isProd,
     sameSite: "Lax",
   });
   const query = new URLSearchParams({
@@ -52,7 +55,7 @@ auth.get("/callback", async (c) => {
       maxAge: expires_in,
       path: "/api", // このトークンを使うのは /api 配下のルートだけ
       httpOnly: true, // JS(document.cookie)から読めなくする = XSS対策
-      secure: true, // HTTPSでのみ送信する = 盗聴対策
+      secure: isProd, // HTTPSでのみ送信する = 盗聴対策
       sameSite: "Lax",
     });
     return c.redirect("/?login=success");
