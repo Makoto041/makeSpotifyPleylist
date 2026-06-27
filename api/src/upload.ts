@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { getCookie } from "hono/cookie";
 import { Buffer } from "buffer";
 import mimeTypes from "mime-types";
-import { spotifyApi, geminiModel } from "./init";
+import { createSpotifyApi, geminiModel } from "./init";
 
 const upload = new Hono();
 
@@ -11,8 +11,9 @@ upload.post("/", async (c) => {
   if (!accessToken) {
     return c.json({ message: "Spotifyにログインしてください", needsLogin: true }, 401);
   }
+  // このリクエスト専用のインスタンスを作り、このユーザーのトークンを乗せる
+  const spotifyApi = createSpotifyApi();
   spotifyApi.setAccessToken(accessToken);
-
   try {
     const body = await c.req.parseBody();
     const playlistName =

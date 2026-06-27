@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { setCookie, getCookie, deleteCookie } from "hono/cookie";
 import { randomBytes } from "crypto";
-import { spotifyApi, SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI } from "./init";
+import { createSpotifyApi, SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI } from "./init";
 
 const auth = new Hono();
 const scope = "playlist-modify-public playlist-modify-private";
@@ -47,10 +47,10 @@ auth.get("/callback", async (c) => {
   }
 
   try {
+    // このリクエスト専用のインスタンスでトークン交換する(共有しない)
+    const spotifyApi = createSpotifyApi();
     const data = await spotifyApi.authorizationCodeGrant(code);
-    const { access_token, refresh_token, expires_in } = data.body;
-    spotifyApi.setAccessToken(access_token);
-    spotifyApi.setRefreshToken(refresh_token);
+    const { access_token, expires_in } = data.body;
     setCookie(c, "access_token", access_token, {
       maxAge: expires_in,
       path: "/api", // このトークンを使うのは /api 配下のルートだけ

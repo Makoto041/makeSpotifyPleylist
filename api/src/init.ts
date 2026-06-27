@@ -11,14 +11,14 @@ export const SPOTIFY_REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI || "";
 export const SPOTIFY_ACCESS_TOKEN = process.env.SPOTIFY_ACCESS_TOKEN || "";
 export const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 
-export const spotifyApi = new SpotifyWebApi({
-  clientId: SPOTIFY_CLIENT_ID,
-  clientSecret: SPOTIFY_CLIENT_SECRET,
-  redirectUri: SPOTIFY_REDIRECT_URI,
-});
-
-if (SPOTIFY_ACCESS_TOKEN) {
-  spotifyApi.setAccessToken(SPOTIFY_ACCESS_TOKEN);
+// リクエストごとに新品の SpotifyWebApi を作る工場。
+// 共有インスタンスを使い回すと、別ユーザーのトークンが混ざる危険があるため。
+export function createSpotifyApi() {
+  return new SpotifyWebApi({
+    clientId: SPOTIFY_CLIENT_ID,
+    clientSecret: SPOTIFY_CLIENT_SECRET,
+    redirectUri: SPOTIFY_REDIRECT_URI,
+  });
 }
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
