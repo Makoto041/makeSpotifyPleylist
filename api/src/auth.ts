@@ -50,7 +50,9 @@ auth.get("/callback", async (c) => {
     spotifyApi.setRefreshToken(refresh_token);
     setCookie(c, "access_token", access_token, {
       maxAge: expires_in,
-      path: "/",
+      path: "/api", // このトークンを使うのは /api 配下のルートだけ
+      httpOnly: true, // JS(document.cookie)から読めなくする = XSS対策
+      secure: true, // HTTPSでのみ送信する = 盗聴対策
       sameSite: "Lax",
     });
     return c.redirect("/?login=success");
