@@ -13,7 +13,7 @@ auth.get("/login", (c) => {
   const state = randomBytes(16).toString("hex");
   setCookie(c, "oauth_state", state, {
     maxAge: 600, // 10分でログインを完了させる想定
-    path: "/",
+    path: "/api/auth", // login(set)とcallback(read/delete)でしか使わない
     httpOnly: true,
     secure: isProd,
     sameSite: "Lax",
@@ -33,7 +33,8 @@ auth.get("/callback", async (c) => {
   const returnedState = c.req.query("state");
   const storedState = getCookie(c, "oauth_state");
   // 一度使った state は成否に関わらず破棄(リプレイ攻撃を防ぐ)
-  deleteCookie(c, "oauth_state", { path: "/" });
+  // set時と同じ path にしないと削除が効かない点に注意
+  deleteCookie(c, "oauth_state", { path: "/api/auth" });
 
   if (!code) {
     return c.json({ error: "Code not provided" }, 400);
