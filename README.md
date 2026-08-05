@@ -1,3 +1,7 @@
+> [!WARNING]
+> このリポジトリは旧実装のためアーカイブされています。
+> 現在の開発は [Makoto041/setlistify](https://github.com/Makoto041/setlistify) で行っています。
+
 # Setlist Spotify
 
 **Setlist Spotify** は、入力されたセットリストから自動的にSpotifyプレイリストを生成するサービスです。
